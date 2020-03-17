@@ -1,0 +1,152 @@
+1、建立项目
+  --django-admin startproject w3cschool_web
+      --生成：--【manage.py】
+             --【项目名称文件夹:w3cschool_web】
+                 --setting.py
+                     --配置中英文：LANGUAGE_CODE = 'zh-hans'
+                     --配置时区：TIME_ZONE = 'Asia/Shanghai'
+                     --配置url每个参数结尾是否加上'/'：APPEND_SLASH = True，django的setting.py文件中没有这个参数，但系统内部默认是True--即添加
+                     --DEBUG = True：表示调试模式，这种状态下输出完整错误信息，且自动编译运行新增内容，不需重启服务器
+                     --数据库配置：这里讲解mysql配置
+                         --DATABASES = {'default':{
+                             'ENGINE': 'django.db.backends.mysql',
+                             'NAME': 'PNF_files_web_mysql',  # 数据库名称
+                             'USER': 'root',  # 用户名
+                             'PASSWORD': 'liming1994',  # 密码
+                             'HOST': 'localhost',  # 主机
+                             'PORT': '3306',  # 端口
+                           }}
+                     --模板配置：其中'DIRS': [os.path.join(BASE_DIR, 'templates')]配置文件路径，'APP_DIRS': False配置应用
+                         --TEMPLATES = [{
+                              'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                              'DIRS': [os.path.join(BASE_DIR, 'templates')],
+                              'APP_DIRS': False,
+                              'OPTIONS': {
+                                  'context_processors': [
+                                      'django.template.context_processors.debug',
+                                      'django.template.context_processors.request',
+                                      'django.contrib.auth.context_processors.auth',
+                                      'django.contrib.messages.context_processors.messages',],},},]
+                     --静态文件配置：
+                         --STATIC_URL = '/static/'
+                           HERE = os.path.dirname(os.path.abspath(__file__))
+                           HERE = os.path.join(HERE, '../')
+                           STATICFILES_DIRS = (
+                               # Put strings here, like "/home/html/static" or "C:/www/django/static".
+                               # Always use forward slashes, even on Windows.
+                               # Don't forget to use absolute paths, not relative paths.
+                               os.path.join(HERE, 'static/'),
+                           )
+                           STATICFILES_FINDERS = (
+                               "django.contrib.staticfiles.finders.FileSystemFinder",
+                               "django.contrib.staticfiles.finders.AppDirectoriesFinder"
+                           )
+                     --app应用添加配置：就是应用名称--HelloWORLD
+                         INSTALLED_APPS = [
+                             'django.contrib.admin',
+                             'django.contrib.auth',
+                             'django.contrib.contenttypes',
+                             'django.contrib.sessions',
+                             'django.contrib.messages',
+                             'django.contrib.staticfiles',
+                             'HelloWORLD',
+                         ]
+                 --【wsgi.py】
+                 --【urls.py】
+                 --【__init__.py】该文件中需加入两行
+                     import pymysql
+                     pymysql.install_as_MySQLdb()
+                 
+2、urls--两个文件夹中urls配置，项目文件夹自带的urls.py，应用文件夹中的urls.py[没有的话自己创建urls.py]
+    --根目录下有：learning_log  learning  static  templates四个文件夹  manage.py一个py文件
+    --创建项目project名称叫作learning_log，应用app名称叫作learning
+        --learning_log下有setting.py  wsgi.py  urls.py 三个文件
+        --learning文件夹下有admin.py  apps.py  models.py  tests.py  urls.py  views,py五个文件
+        --static文件夹存放js  css  fonts  img四个文件夹
+        --templates文件夹存放：模板html和各种不同应用中的特殊html文件
+    --url配置：
+        【注】：url和path都可以进行配置，这里使用path进行配置
+        --url：就是由协议+ip/dns域名:端口+文件路径，协议和路由器地址由django自动解析，我们实际配置url就是配置根目录下多个项目中怎么寻找到相应
+              app应用中的视图函数，由视图函数进行解析获取相应的html，再渲染到浏览器
+        --步骤一：在项目目录learning_log/urls.py中配置url，这里'HelloWORLD/'是url，即我们请求url时输入https:127.0.0.1:8000/HelloWORLD/
+        系统自动寻找HelloWORLD.urls视图
+            from django.contrib import admin
+            from django.conf.urls import url, include
+
+            urlpatterns = [
+                url('admin/', admin.site.urls),
+                url(r'HelloWORLD/', include('HelloWORLD.urls', namespace='HelloWORLD'))
+                ]
+        --步骤二：这里配置对应具体到哪个视图函数
+            from django.conf.urls import url
+            from . import views
+
+            app_name = 'HelloWORLD'
+            urlpatterns = [
+                url(r'', views.hello, name='hello'),
+                ]
+                
+3、model模型--ORM框架具体的表现
+    --通过在py文件中使用Filed系列函数定义不同类型的字段，以达到在views.py文件中对数据进行 查询 增加 更新 删除在内的一系列操作的目的，并最终渲染到
+      html文件中
+    --一般是定义模型类的方式，在views.py中导入模型类并实例化，通过实例对象调用save()  objects().all()  objects().get()等方式来操作数据库
+    【示例】：
+        from django.db import models
+
+        class Test(models.Model):
+            name = models.CharField(max_length=20)
+    --向__init__.py文件添加代码，否则无法将数据库和py项目对接起来，ORM框架无法生效
+        import pymysql
+        pymysql.install_as_MySQLdb()  # 和mysql交互的函数
+    --创建数据库  
+        create database w3cschool_web charset=utf8  必须带上数据集，否则输入中文时产生错误，而且数据库名称必须和setting.py中Name保持一致
+        至于数据表，由  应用名称+model中函数名称  组合而成
+    --调用接下来的命令前，必须确保数据库已经存在，或者是自己创建了，记住数据库名称一定要设置好，否则ORM框架不知道去哪里创建数据表
+        python manage.py makemigrations
+        python manage.py migrate
+      
+           
+4、views.py视图--通过导入模型类，实例化相关对象，操作数据库中数据
+    --添加数据
+    --查询数据
+    --删除数据
+    --更新数据
+    
+5、
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
