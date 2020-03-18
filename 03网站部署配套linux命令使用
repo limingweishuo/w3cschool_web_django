@@ -1,0 +1,105 @@
+1、查询python位置
+    --python -V  大写V 查询版本
+    --whereis python  查询位置
+    --python  进入交互界面
+2、【解决方案】：yum和python3不兼容，导致rpm -qa|grep yum可以查到yum安装信息，但是输入yum及其相关命令却无效
+    --which yum  查询yum位置  -->  /usr/bin/yum
+    --cd /usr/bin  进入目录
+    --vi yum  进入一般模式，开始编辑yum
+        --i  进入输入模式
+        --修改 #! /usr/bin/python 为 #! /usr/bin/python2.7
+        --Esc  推出输入模式
+        --输入 :wq 保存/退出
+    --cd /usr/libexec/  进入目录
+    --vi urlgrabber-ext-down  修改urlgrabber-ext-down文件
+        --i  进入输入模式
+        --修改 #! /usr/bin/python 为 #! /usr/bin/python2.7
+        --Esc  推出输入模式
+        --输入 :wq 保存/退出
+    【这样就可以使用yum】
+3、linux中使用rpm
+    1、查看使用rpm方式安装的应用软件，一般推荐此法安装便于查看，像使用tar.bz2、tar.gz等源码包自己编译安装的不能查看
+        --rpm -qa | grep “软件或者包的名字”  查看具体某个安装应用软件
+        --rpm -qa  查看所有应用
+    2、
+4、yum命令行
+    1、yum查询安装的包
+        yum list package  查询软件应用包
+        yum list  installed  查询安装的应用
+        yum list installed | grep '待查询应用'  查询具体某个应用
+5、【解决方案】：yum命令出现Loaded plugins: fastestmirror
+    --fastestmirror是yum的一个加速插件，这里是插件提示信息是插件不能用了
+        --修改插件的配置文件
+            --vi /etc/yum/pluginconf.d/fastestmirror.conf
+            --将enabled=1改为enabled=0
+        --修改yum的配置文件
+            --vi /etc/yum.conf
+            --将plugins=1改为plugins=0
+    【注】以上操作需要切换到root用户下，否则会出现vim e505:read only 和vim e212错误
+6、删除文件夹和文件
+    linux删除目录很简单可以用rmdir，但目录非空则会报错，可使用rm命令 即：
+        rm -rf 目录名字  |  -r就是向下递归，不管有多少级目录，-f就是直接强行删除，不作任何提示的意思
+    【示例】：
+    --rm -rf /var/log/httpd/access
+        --将会删除/var/log/httpd/access目录以及其下所有文件、文件夹
+    --rm -f /var/log/httpd/access.log
+        --将会强制删除/var/log/httpd/access.log这个文件
+7、移动文件 文件夹【注意不是复制cp】
+    mv 源码地址 目标地址
+        --mv /etc/yum.repos.d/tmp /usr
+            --将/etc/yum.repos.d/tmp文件夹下所有文件复制粘贴到文件夹/usr里面
+        --mv * ../
+            --将子目录下所有文件复制到父目录中，前提是提前cd到子目录中
+8、linux查询基础命令
+    1、lsb_release -a
+        --查看所有版本信息，能够看到该机器是乌班图还是CentOS或者其他什么系统
+    2、which  --查看可执行文件的位置
+        --在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。
+          也就是说，使用which命令，就可以看到某个系统命令是否存在，以及执行的到底是哪一个位置的命令
+        【参数】：
+            -n 　指定文件名长度，指定的长度必须大于或等于所有文件中最长的文件名。
+            -p 　与-n参数相同，但此处的包括了文件的路径。
+            -w 　指定输出时栏位的宽度。
+            -V 　显示版本信息
+        【示例】：
+            --which lsmod  查看lsmod位置
+            --which which  查看which命令的位置
+            --which cd 查看cd命令位置，但是无法查看。因为cd时bash内建命令
+    3、whereis  --查看文件位置
+    4、查看python第三方包的位置
+        --python  进入python安装路径
+        --使用python代码查看第三方包安装位置
+            --import sys
+            --sys.path
+            >>>/opt/buildtools/python/lib/python3.7/site-packages/
+    5、创建文件夹和文件
+        --创建文件夹：mkdir 文件夹名称
+            mkdir lwx898295  --创建lwx898295文件夹
+        --创建文件：touch 文件名称
+            touch test.txt  创建test.txt文件
+9、ln  建立软连接
+        
+          
+          
+          
+          
+          
+          
+          
+          
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
