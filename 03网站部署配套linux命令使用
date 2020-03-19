@@ -78,7 +78,7 @@
         --创建文件：touch 文件名称
             touch test.txt  创建test.txt文件
 9、ln  建立软连接
-        
+            
           
           
           
