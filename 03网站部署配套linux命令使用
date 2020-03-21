@@ -77,6 +77,34 @@
             mkdir lwx898295  --创建lwx898295文件夹
         --创建文件：touch 文件名称
             touch test.txt  创建test.txt文件
+    6、【windows往Linux传文件时，中文乱码问题解决】：
+        【注】：不要使用 yum install chinese-support 不一定找得到包希
+        --locale  查看编码设置
+        --echo $LANG  查看可以使用的编码方式
+        
+        --yum groupinstall "Fonts"
+        --yum groupinstall "Input Methods"
+        
+        --vim /etc/locale.conf
+        --LANG="zh_CN.UTF-8"
+        --vim ~/.bashrc
+        --# 追加
+        --export LANG='UTF-8'
+        --export LC_ALL='zh_CN.UTF-8'
+        --export LC_CTYPE='zh_CN.UTF-8'  至此显示为中文，但是上传的文件名还是
+        --source ~/.bashrc
+        
+        --查询，下载convmv软件
+            --rpm -qa |grep convmv
+            --yum -y install convmv
+            --convmv -f gbk -t utf-8 -r –notest  /home  
+            【注释】：
+                就是将/home目录下原来文件名是gbk编码方式的全部改为utf-8格式的
+                    -f  后面为原来的编码方式
+                    -t 后面是要更改为的编码方式
+                    -r 表示这个目录下面的所有文件
+                    --notest 表示马上执行，而不是仅仅测试而已
+                另外该命令如果需要root权限，则需要使用sudo convmv -f gbk -t utf-8 -r –notest  /home  
 9、ln  建立软连接
             
           
