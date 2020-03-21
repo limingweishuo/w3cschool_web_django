@@ -32,11 +32,16 @@
         --在浏览器上使用ip或者域名，进行访问
 6、安装nginx
     --
-
-
-
-
-
+7、上传代码，修改中文乱码问题
+    --上传代码，使用pscp
+         --pscp上传单个文件到文件夹
+             --pscp C:\Users\lwx898295\Desktop\lwx898295\python\djando\pnf项目进展.txt root@10.29.11.235:/home/lwx898295
+         --pscp上传文件夹到服务器上文件夹，加一个-r，可以递归传输
+             --pscp -r C:\Users\lwx898295\Desktop\lwx898295\python\djando\PNF_Repo_files_renew\ root@10.29.11.235:/home/lwx898295/
+         --pscp上传时加上登录密码 -pw 密码
+             --pscp -r -pw web@root  C:\Users\lwx898295\Desktop\lwx898295\python\djando\PNF_Repo_files_renew\test.txt root@10.29.11.235:/home/lwx89829
+    --修改windows编码方式和linux不同造成中文乱码
+         --convmv -f gbk -t utf-8 -r --notest  /home/lwx898295 
 
 
 
